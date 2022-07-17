@@ -1,0 +1,65 @@
+<table class="table table-no-more table-bordered table-striped mb-0">
+    {% if(!options.get().nohead) { %}
+    <thead>
+        <tr>
+            {% for (let col of options.cols) if (view.isDisplayed(col) && (!col.group || col.group===true)) { %}
+            <th class="text-{{'align' in col ? col.align : 'left'}}" data-name="{{col.name}}">
+                {% if(options.get().sort!==false && col.sort !== false) { %}<a href="#" class="orderby">{% } %}
+                    {{col.title}}
+                {% if(options.get().sort!==false && col.sort !== false) { %}</a>{% } %}
+                {% if(options.get().sort[0] === col.name) { %}
+                <i class="fa fa-chevron-{{options.get().sort[1]==='asc' ? 'down' : 'up'}}"></i>
+                {% } %}
+            </th>
+            {% } %}
+        </tr>
+    </thead>
+    {% } %}
+    <tbody>
+        {% var r = options.get().results(); %}
+        {% if (_.size(r) > 0) { %}
+            {% for(let x in r) { let model = r[x]; %}
+            <tr
+                class="item {{options.get().rowsflex ? (options.get().rowsflex === true ? 'row-no-lg mx-0' : options.get().rowsflex) : ''}} {{options.get().rowsCss || ''}}"
+                    data-cid="{{model.cid}}" data-id="{{model.id}}">
+                {% var colsData = {}; %}
+                {% for(let col of options.cols) if (view.isDisplayed(col)) { %}
+                    {% var text = ''; if(!('val' in col)) { text = model.get(col.name); } else { try { text = col.val(model); }catch(e){ text = '-'; } } %}
+                    {% var textCss = col.textCss || ''; %}
+                    {% var title = col.title || ''; %}
+                    {% var notitle = col.notitle || false; %}
+                    {% var breakline = col.breakline || false; %}
+                    {% var item = {text, textCss, title, notitle, breakline}; %}
+
+                    {% if(!col.group || col.group === true) { %}
+                        {% colsData[col.name] = col; %}
+                        {% colsData[col.name].items = [item]; %}
+                    {% } else { %}
+                        {% colsData[col.group].items.push(item); %}
+                    {% } %}
+                {% } %}
+
+                {% for(let x in colsData) { var colData = colsData[x]; %}
+                <td {% if(!colData.nomobiletitle) { %}data-title="{{colData.title}}"{% } %}
+                    data-name="{{ colData.name }}"
+                    class="text-{{'align' in colData ? colData.align : 'left'}} {{!colData.nomobiletitle ? '' : 'no-xs-label'}}">
+                    {% for(let x in colData.items) { var item = colData.items[x]; %}
+                        {% if (x > 0 && colData.separator) { %}{{colData.separator}}{% } %}
+                        {% if (item.breakline) { %}<br>{% } %}
+                        {% if (colData.group && (colData.span !== false)) { %}
+                            <span class="{{ item.textCss }}">{% if (colData.group && item.title && !item.notitle) { %}{{item.title}}{% } %}
+                        {% } %}
+                        {{ item.text }}
+                        {% if (colData.group || colData.span) { %}
+                            </span>
+                        {% } %}
+                    {% } %}
+                </td>
+                {% } %}
+            </tr>
+            {% } %}
+        {% } else { %}
+        <tr><td colspan="{{_.size(options.cols)}}" class="text-center ignore d-block d-lg-table-cell">{{ options.get().norecord ? _.result(options.get(),'norecord') : 'Nenhum registro cadastrado' }}</td></tr>
+        {% } %}
+    </tbody>
+</table>

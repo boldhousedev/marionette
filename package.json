@@ -1,0 +1,18 @@
+{
+    "name": "marionette-bd",
+    "description": "-",
+    "version": "1.16.6-alpha",
+    "browser": "src/marionette.js",
+    "main": "src/marionette.js",
+    "module": "src/marionette.js",
+    "jsnext:main": "src/marionette.js",
+    "scripts": {},
+    "dependencies": {
+        "backbone-front-bd": "github:boldhousedev/backbone-front",
+        "backbone.marionette": "^4.1.3",
+        "ejs": "^3.1.6",
+        "jquery": "^3.6.0",
+        "jquery-mask-plugin": "^1.14.16",
+        "terser": "^4.4"
+    }
+}

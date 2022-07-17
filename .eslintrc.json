@@ -1,0 +1,28 @@
+{
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "rules": {
+        "ident": 0,
+        "no-unused-vars": 0,
+        "no-undef": 2,
+        "no-useless-escape": 0
+    },
+    "globals": {
+        "$": "writable",
+        "Bb": "writable",
+        "Mn": "writable",
+        "_": "writable",
+        "v8n": "writable",
+        "Theme": "writable",
+        "ThemeInit": "writable",
+        "localStorage": "writable",
+        "console": "writable",
+        "setTimeout": "writable",
+        "setInterval": "writable",
+        "clearInterval": "writable",
+        "window": "writable"
+    }
+}

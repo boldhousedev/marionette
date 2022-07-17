@@ -1,0 +1,32 @@
+<table class="table table-no-more table-bordered table-striped mb-0">
+    <thead>
+        <tr>
+            {% for (let col of options.cols) if (view.isDisplayed(col)) { %}
+            <th class="text-{{'align' in col ? col.align : 'left'}}" data-name="{{col.name}}">
+                {% if(options.get().sort!==false && col.sort !== false) { %}<a href="#" class="orderby">{% } %}
+                    {{col.title}}
+                {% if(options.get().sort!==false && col.sort !== false) { %}</a>{% } %}
+                {% if(options.get().sort[0] === col.name) { %}
+                <i class="fa fa-chevron-{{options.get().sort[1]==='asc' ? 'down' : 'up'}}"></i>
+                {% } %}
+            </th>
+            {% } %}
+        </tr>
+    </thead>
+    <tbody>
+        {% var r = options.get().results(); %}
+        {% if (_.size(r) > 0) { %}
+            {% for(let x in r) { let model = r[x]; %}
+            <tr class="item" data-cid="{{model.cid}}" data-id="{{model.id}}">
+                {% for(let col of options.cols) if (view.isDisplayed(col)) { var text = ''; %}
+                {% //text = 'val' in col ? col.val(model) : model.get(col.name); %}
+                {% if(!('val' in col)) { text = model.get(col.name); } else { try { text = col.val(model); }catch(e){ text = '-'; } } %}
+                <td data-title="{{col.title}}" data-name="{{ col.name }}" class="text-{{'align' in col ? col.align : 'left'}}">{{text ? text : '&nbsp;'}}</td>
+                {% } %}
+            </tr>
+            {% } %}
+        {% } else { %}
+        <tr><td colspan="{{_.size(options.cols)}}" class="text-center ignore d-block d-lg-table-cell">{{ options.get().norecord ? _.result(options.get(),'norecord') : 'Nenhum registro cadastrado' }}</td></tr>
+        {% } %}
+    </tbody>
+</table>

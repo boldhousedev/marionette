@@ -1,0 +1,4 @@
+{% for (let y in options.cols) if(options.cols[y].export!==false) { let col = options.cols[y]; %}{{col.title}};{% } %}
+{% var r = options.data; %}{% if (_.size(r) > 0) { %}{% for(let x in r) { let model = r[x]; %}{% for(let y in options.cols) if(options.cols[y].export!==false) { let col = options.cols[y]; var text = ''; %}{% if(!('val' in col) && !('exportVal' in col)) { text = model.get(col.name); } else { try { text = col[('exportVal' in col) ? 'exportVal' : 'val'](model); }catch(e){ text = '-'; } } %}{{text ? text : ''}};{% } %}
+{% } %}
+{% } else { %}Nenhum dado encontrado{% } %}

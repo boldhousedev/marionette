@@ -1,0 +1,5 @@
+<div class="content alert alert-default col-12">
+    {% for(let x in options.data) { let legend = options.data[x]; %}
+    <span class="me-4 d-block d-sm-inline" style="white-space: nowrap;"><i class="legend {{/^(r|s)\s/.test(legend.icon) ? ('fa'+legend.icon) : ('fa fa-'+(legend.icon || 'circle'))}} {{legend.color && _.indexOf(['default','dark','danger','warning','success','primary','info'],legend.color)>-1 ? 'text-'+legend.color : '' }}" style="{{!legend.color || _.indexOf(['default','dark','danger','warning','success','primary','info'],legend.color)>-1 ? '' : 'color: '+legend.color+';' }}" data-title="{{legend.title}}"></i> <span style="white-space: initial;">{{legend.title}}</span></span>
+    {% } %}
+</div>

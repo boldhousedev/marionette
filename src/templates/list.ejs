@@ -1,0 +1,67 @@
+<%_ if(typeof results === 'undefined') var results = options.get().results(); -%>
+<%_ if(typeof cols === 'undefined') var cols = options.getCols(results); -%>
+<%_ var filtersFilled = _.size(options.filters.collection.filter.filledValuesOnDisplayedCols()) > 0; -%>
+<%_ var noRowsText = _.result(options.get(), (!filtersFilled ? 'norecord' : 'noResults')) || 'Nenhum registro encontrado'; -%>
+<%_ var noRowsCss = _.result(options.get(), (!filtersFilled ? 'noRecordCss' : 'noResultsCss')) || 'text-center'; -%>
+<%_ if (options.get().noRecordOnTable !== false || _.size(results) > 0) { -%>
+<table class="<%- options.get().tableCss ? options.get().tableCss : 'table table-no-more table-bordered table-striped mb-0' %>">
+    <%_ if(!options.get().nohead) { -%>
+    <thead>
+        <tr>
+            <%_ for (let col of cols) if (view.isDisplayed(col) && (!col.group || col.group===true)) { -%>
+            <th class="text-<%-'align' in col ? col.align : 'left'-%>" data-name="<%-col.name-%>">
+                <%_ if(options.get().sort!==false && col.sort !== false) { -%><a href="#" class="orderby"><%_ } -%>
+                    <%-col.title-%>
+                <%_ if(options.get().sort!==false && col.sort !== false) { -%></a><%_ } -%>
+                <%_ if(options.get().sort[0] === col.name) { -%>
+                <i class="fa fa-chevron-<%-options.get().sort[1]==='asc' ? 'down' : 'up'-%>"></i>
+                <%_ } -%>
+            </th>
+            <%_ } -%>
+        </tr>
+    </thead>
+    <%_ } -%>
+    <tbody>
+        <%_ if (_.size(results) > 0) { -%>
+            <%_ for(let x in results) { let model = results[x]; -%>
+            <tr class="item <%- options.get().rowsflex ? (options.get().rowsflex === true ? 'row-no-lg mx-0' : options.get().rowsflex) : '' %>
+                <%- _.result2(options.get(), 'rowsCss', '', [model], view) %>" data-cid="<%-model.cid-%>" data-id="<%-model.id-%>">
+                <%_ var colsData = {}; -%>
+                <%_ for(let col of cols) if (view.isDisplayed(col)) { -%>
+                    <%_ var text = ''; if(!('val' in col)) { text = model.get(col.name); } else { try { text = col.val(model); }catch(e){ text = ''; } } -%>
+                    <%_ var textCss = col.textCss || ''; -%>
+                    <%_ var title = col.title || ''; -%>
+                    <%_ var notitle = col.notitle || false; -%>
+                    <%_ var breakline = col.breakline || false; -%>
+                    <%_ var item = {text, textCss, title, notitle, breakline}; -%>
+
+                    <%_ if(!col.group || col.group === true) { -%>
+                        <%_ colsData[col.name] = col; -%>
+                        <%_ colsData[col.name].items = [item]; -%>
+                    <%_ } else { -%>
+                        <%_ colsData[col.group].items.push(item); -%>
+                    <%_ } -%>
+                <%_ } -%>
+
+                <%_ for(let x in colsData) { var colData = colsData[x]; -%>
+                <td <% if(!colData.nomobiletitle) { %>data-title="<%-colData.title-%>"<%_ } -%>
+                    data-name="<%- colData.name -%>"
+                    class="text-<%-'align' in colData ? colData.align : 'left' %> <%- !colData.nomobiletitle ? '' : 'no-xs-label' %>">
+                    <%_ for(let x in colData.items) { var item = colData.items[x]; -%>
+                        <%_ if (x > 0 && colData.separator && item.text) { -%><%-colData.separator-%><%_ } -%>
+                        <%_ if (item.breakline) { -%><br><%_ } -%>
+                        <%_ if (colData.group && (colData.span !== false)) { -%><span class="<%- item.textCss -%>"><%_ if (colData.group && item.title && !item.notitle) { -%><%-item.title-%><%_ } -%><%_ } -%><%- item.text -%>
+                        <%_ if (colData.group || colData.span) { -%></span><%_ } -%>
+                    <%_ } -%>
+                </td>
+                <%_ } -%>
+            </tr>
+            <%_ } -%>
+        <%_ } else { -%>
+        <tr><td colspan="<%-_.size(cols)-%>" class="text-center ignore d-block d-lg-table-cell <%- noRowsCss %>"><%- noRowsText -%></td></tr>
+        <%_ } -%>
+    </tbody>
+</table>
+<%_ } else { -%>
+    <div class="<%- noRowsCss %>"><%- noRowsText -%></div>
+<%_ } -%>

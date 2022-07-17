@@ -1,0 +1,28 @@
+{% var hidePagination = !(options.collection.pagination.activated) || !(options.collection.models.length); %}
+<form class='col-12 px-0' id="{{cid}}">
+    <div class="w-100 alert alert-primary p-3 mt-3 {{hidePagination ? 'd-none' : ''}}">
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <div class="input-group">
+                    {% if(options.navFirst !== false) { %}
+                    <button type="button" class="input-group-text bg-white-n-disabled border-0 first d-none d-lg-inline-block" {{!options.collection.pagination.pagesData.first ? 'disabled="disabled"' : ''}}><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left mx-0"></i></button>
+                    {% } %}
+                    {% if(options.navPrev !== false) { %}
+                    <button type="button" class="input-group-text bg-white-n-disabled border-0 prev" {{!options.collection.pagination.pagesData.prev ? 'disabled="disabled"' : ''}}><i class="fa fa-chevron-left mx-0"></i></button>
+                    {% } %}
+                    <select class="form-select form-control form-control-lg custom-select goto border-white">
+                        {% var total = _.size(options.collection.pagination.pagesData.list); %}
+                        {% for (p of options.collection.pagination.pagesData.list) { %}
+                        <option value="{{p}}" {{options.collection.pagination.page === p ? 'selected="selected"' : ''}}>{{!options.pageFormat ? p : _.template(options.pageFormat)({page: p, total})}}</option>
+                        {% } %}
+                    </select>
+                    {% if(options.navNext !== false) { %}
+                    <button type="button" class="input-group-text bg-white-n-disabled border-0 next" {{!options.collection.pagination.pagesData.next ? 'disabled="disabled"' : ''}}><i class="fa fa-chevron-right mx-0"></i></button>
+                    {% } %}
+                    {% if(options.navLast !== false) { %}
+                    <button type="button" class="input-group-text bg-white-n-disabled border-0 last d-none d-lg-inline-block" {{!options.collection.pagination.pagesData.last ? 'disabled="disabled"' : ''}}><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right mx-0"></i></button>
+                    {% } %}
+                </div>
+        </div>
+    </div>
+</form>

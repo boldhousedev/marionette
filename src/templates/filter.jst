@@ -1,0 +1,48 @@
+<form class='col-12 alert alert-default p-3 mb-4 {{!(options.cols && options.cols.length>0) ? 'd-none' : ''}}' id="{{cid}}">
+    <div class="content">
+        {% var cols = model.displayedCols(); %}
+        {% if(cols && cols.length>0) { var c = 0; %}
+        {% for(filter of cols) if (!('available' in filter) || filter.available) { %}
+
+            {% if(c === 0 || (c % 3) === 0) { %}
+                {% if ((c % 3) === 0) { %}</div>{% } %}
+            <div class="row">
+            {% } %}
+
+                <div class="form-group col-lg-4">
+                    <label for="{{filter.name}}" class='text-dark {{filter.labelCssClass || 'd-block'}}'>{{filter.title}}</label>
+                    {% if (!filter.type || filter.type === 'text') { %}
+                        <input type="text" class="form-control text-4 {{filter.cssClass}}" name="{{filter.name}}" {{filter.mask ? 'data-mask="'+filter.mask+'"' : ''}} value="{{model.get(filter.name)}}" {{filter.attrs}}>
+                    {% } else if (filter.type === 'list') { %}
+                        <select class="form-select form-control text-4 {{filter.cssClass}}" name="{{filter.name}}" {{filter.multiple ? 'multiple="multiple"' : ''}} {{filter.attrs}}>
+                            {% let vs = (model.get(filter.name)+'').split(','); %}
+                            {% if (filter.empty !== false) { %}
+                            <option value=''>-</option>
+                            {% } %}
+                            {% if ('models' in filter) { %}
+                                {% for(let filterModel of filter.models()) { %}
+                                {% let v = filterModel.get(filterModel.idAttribute)+''; %}
+                                <option value="{{filterModel.get(filterModel.idAttribute)}}" {{_.indexOf(vs, v) !== -1 ? 'selected="selected"' : ''}}>{{filterModel.getTitle()}}</option>
+                                {% } %}
+                            {% } else if('list' in filter){ let filterList = filter.list(); %}
+                                {% for(let x in filterList) { filterItem = filterList[x]; %}
+                                {% let v = filterItem.id+''; %}
+                                <option value="{{'id' in filterItem ? filterItem.id : x}}" {{_.indexOf(vs, v) !== -1  ? 'selected="selected"' : ''}}>{{filterItem.title}}</option>
+                                {% } %}
+                            {% } %}
+                        </select>
+                    {% } %}
+                </div>
+                {% c++; %}
+
+        {% } %}
+
+        </div>
+
+        {% } %}
+        <button type='submit' class='search btn btn-primary text-4'>{{ _.result(options, 'searchText') || 'Pesquisar' }}</button>
+        <button type='button' class='restart btn btn-default text-4 {{ options.hideRestart ? 'd-none' : '' }}'>{{ _.result(options, 'restartText') || 'Reiniciar' }}</button>
+        <button type='button' class='clear btn btn-default text-4 {{ options.hideClear ? 'd-none' : '' }}'>{{ _.result(options, 'clearText') || 'Limpar' }}</button>
+        <button type='button' class='config btn btn-default text-4 {{ options.hideConfig ? 'd-none' : '' }}'>{{ _.result(options, 'configText') || 'Configurar' }}</button>
+    </div>
+</form>

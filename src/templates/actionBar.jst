@@ -1,0 +1,20 @@
+{% for(let x in options.actions) { let action = options.actions[x]; %}
+{% var cond1 = _.indexOf(['default','danger','warning','success','primary','secondary','info','light','dark'],action.btnColor)>-1; %}
+{% var btnColor = 'btnColor' in action ? (cond1 ? 'btn-'+action.btnColor : '') : 'btn-default text-dark'; %}
+{% var tag = 'navigate' in action ? 'a' : 'button'; %}
+<{{tag}} 
+    {% if(tag==='button') { %}
+        type="{{ 'type' in action ? action.type : 'button' }}"
+    {% } %}
+    {{'navigate' in action ? ' href="' +action.navigate+'"' : '' }}
+    {{'route' in action ? ' data-route="' +action.route+'"' : '' }}
+    {{'title' in action ? ' title="' +action.title+'"' : '' }}
+    class="action-{{x}} btn {{action.addClass || ''}} {{btnColor}} {{action.btnCss}}"
+    style="{{'btnColor' in action && !cond1 ? 'background-color: '+action.btnColor+'; border-color: '+action.btnColor+';' : ''}}"
+    {{action.attrs || ''}}>
+    {{'beforeText' in action ? action.beforeText : ''}}
+    <i class="{{'ico' in action ? 'fa fa-'+action.ico : ''}} {{action.iCss}}"></i>
+    {% if (options.global.addSpanForTitle) { %}<span>&nbsp;{{action.title}}</span>{% } %}
+    {{'afterText' in action ? action.afterText : ''}}
+</{{tag}}>
+{% } %}
